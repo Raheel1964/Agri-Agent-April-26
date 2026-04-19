@@ -44,6 +44,18 @@ with st.sidebar:
     if st.button("Calculate Shipment Margin"):
         st.sidebar.metric("Net Profit (PKR)", f"{net_profit_pkr:,.0f}")
         st.sidebar.metric("Profit Margin", f"{margin_pct:.2f}%")
+        # User Inputs
+    cost_pkr = st.number_input("Purchase Cost (PKR/Kg)", value=80.0)
+    freight_usd = st.number_input("Freight + Logistics (USD/Container)", value=2500.0)
+    container_tons = st.number_input("Container Size (Tons)", value=25.0)
+    sale_aed = st.number_input("Sale Price in Dubai (AED/Kg)", value=2.5)
+    
+    # NEW LINE TO PASTE HERE:
+    exchange_rate = st.number_input("Exchange Rate (PKR/AED)", value=76.0)
+    
+    # Conversion Logic: Update the '76' to use the new 'exchange_rate' variable
+    total_cost_pkr = (cost_pkr * container_tons * 1000) + (freight_usd * 280) 
+    total_revenue_pkr = (sale_aed * exchange_rate) * (container_tons * 1000) # Updated here
 
 # E. THE AGENT REASONING ENGINE
 market_stats = get_market_data(hs_input)
