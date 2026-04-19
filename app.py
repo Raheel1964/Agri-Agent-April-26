@@ -25,6 +25,25 @@ with st.sidebar:
     hs_input = st.selectbox("Select HS Code", ['0701', '0804', '0712'])
     market = st.text_input("Target Market", "United Arab Emirates")
     st.button("Run Market-Access Agent")
+    st.divider()
+    st.header("💰 Profitability Calculator")
+    
+    # User Inputs
+    cost_pkr = st.number_input("Purchase Cost (PKR/Kg)", value=80.0)
+    freight_usd = st.number_input("Freight + Logistics (USD/Container)", value=2500.0)
+    container_tons = st.number_input("Container Size (Tons)", value=25.0)
+    sale_aed = st.number_input("Sale Price in Dubai (AED/Kg)", value=2.5)
+    
+    # Conversion Logic (using 1 AED = 76 PKR as a baseline)
+    total_cost_pkr = (cost_pkr * container_tons * 1000) + (freight_usd * 280) 
+    total_revenue_pkr = (sale_aed * 76) * (container_tons * 1000)
+    
+    net_profit_pkr = total_revenue_pkr - total_cost_pkr
+    margin_pct = (net_profit_pkr / total_revenue_pkr) * 100
+
+    if st.button("Calculate Shipment Margin"):
+        st.sidebar.metric("Net Profit (PKR)", f"{net_profit_pkr:,.0f}")
+        st.sidebar.metric("Profit Margin", f"{margin_pct:.2f}%")
 
 # E. THE AGENT REASONING ENGINE
 market_stats = get_market_data(hs_input)
