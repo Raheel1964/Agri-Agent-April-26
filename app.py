@@ -29,26 +29,32 @@ with st.sidebar:
     st.header("💰 Profitability Calculator")
     
     # User Inputs
-    cost_pkr = st.number_input("Purchase Cost (PKR/Kg)", value=80.0)
-    freight_usd = st.number_input("Freight + Logistics (USD/Container)", value=2500.0)
-    container_tons = st.number_input("Container Size (Tons)", value=25.0)
-    sale_aed = st.number_input("Sale Price in Dubai (AED/Kg)", value=2.5)
+    st.header("💰 Profitability Calculator")
     
-    # Conversion Logic (using 1 AED = 76 PKR as a baseline)
+    # 1. User Inputs (Make sure these labels are unique!)
+    cost_pkr = st.number_input("Purchase Cost (PKR/Kg)", value=80.0, key="cost_input")
+    freight_usd = st.number_input("Freight + Logistics (USD/Container)", value=2500.0, key="freight_input")
+    container_tons = st.number_input("Container Size (Tons)", value=25.0, key="size_input")
+    sale_aed = st.number_input("Sale Price in Dubai (AED/Kg)", value=2.5, key="sale_input")
+    exchange_rate = st.number_input("Exchange Rate (PKR/AED)", value=76.0, key="exch_input")
+    
+    # 2. Conversion Logic
+    # Using the variables above to calculate
     total_cost_pkr = (cost_pkr * container_tons * 1000) + (freight_usd * 280) 
-    total_revenue_pkr = (sale_aed * 76) * (container_tons * 1000)
+    total_revenue_pkr = (sale_aed * exchange_rate) * (container_tons * 1000)
     
     net_profit_pkr = total_revenue_pkr - total_cost_pkr
-    margin_pct = (net_profit_pkr / total_revenue_pkr) * 100
+    
+    # Avoid division by zero if revenue is 0
+    if total_revenue_pkr > 0:
+        margin_pct = (net_profit_pkr / total_revenue_pkr) * 100
+    else:
+        margin_pct = 0.0
 
-    if st.button("Calculate Shipment Margin"):
-        st.sidebar.metric("Net Profit (PKR)", f"{net_profit_pkr:,.0f}")
-        st.sidebar.metric("Profit Margin", f"{margin_pct:.2f}%")
-        # User Inputs
-    cost_pkr = st.number_input("Purchase Cost (PKR/Kg)", value=80.0)
-    freight_usd = st.number_input("Freight + Logistics (USD/Container)", value=2500.0)
-    container_tons = st.number_input("Container Size (Tons)", value=25.0)
-    sale_aed = st.number_input("Sale Price in Dubai (AED/Kg)", value=2.5)
+    # 3. Trigger Button
+    if st.button("Calculate Shipment Margin", key="calc_button"):
+        st.metric("Net Profit (PKR)", f"{net_profit_pkr:,.0f}")
+        st.metric("Profit Margin", f"{margin_pct:.2f}%")
     
     # NEW LINE TO PASTE HERE:
     exchange_rate = st.number_input("Exchange Rate (PKR/AED)", value=76.0)
