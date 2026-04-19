@@ -31,38 +31,26 @@ with st.sidebar:
     # User Inputs
     st.header("💰 Profitability Calculator")
     
-    # 1. User Inputs (Make sure these labels are unique!)
-    cost_pkr = st.number_input("Purchase Cost (PKR/Kg)", value=80.0, key="cost_input")
-    freight_usd = st.number_input("Freight + Logistics (USD/Container)", value=2500.0, key="freight_input")
-    container_tons = st.number_input("Container Size (Tons)", value=25.0, key="size_input")
-    sale_aed = st.number_input("Sale Price in Dubai (AED/Kg)", value=2.5, key="sale_input")
-    exchange_rate = st.number_input("Exchange Rate (PKR/AED)", value=76.0, key="exch_input")
+    # 1. Inputs: This is where the user types data
+    cost_pkr = st.number_input("Purchase Cost (PKR/Kg)", value=80.0, key="cost_val")
+    freight_usd = st.number_input("Freight + Logistics (USD/Container)", value=2500.0, key="freight_val")
+    container_tons = st.number_input("Container Size (Tons)", value=25.0, key="size_val")
+    sale_aed = st.number_input("Sale Price in Dubai (AED/Kg)", value=2.5, key="sale_val")
+    exchange_rate = st.number_input("Exchange Rate (PKR/AED)", value=76.0, key="exch_input_field")
     
-    # 2. Conversion Logic
-    # Using the variables above to calculate
+    # 2. Calculation Logic
     total_cost_pkr = (cost_pkr * container_tons * 1000) + (freight_usd * 280) 
     total_revenue_pkr = (sale_aed * exchange_rate) * (container_tons * 1000)
-    
     net_profit_pkr = total_revenue_pkr - total_cost_pkr
     
-    # Avoid division by zero if revenue is 0
-    if total_revenue_pkr > 0:
-        margin_pct = (net_profit_pkr / total_revenue_pkr) * 100
-    else:
-        margin_pct = 0.0
+    margin_pct = (net_profit_pkr / total_revenue_pkr * 100) if total_revenue_pkr > 0 else 0
 
-    # 3. Trigger Button
-    if st.button("Calculate Shipment Margin", key="calc_button"):
+    st.divider()
+
+    # 3. Output Metrics: This is where the results are displayed
+    if st.button("Calculate Shipment Margin", key="main_calc_btn"):
         st.metric("Net Profit (PKR)", f"{net_profit_pkr:,.0f}")
         st.metric("Profit Margin", f"{margin_pct:.2f}%")
-    
-    # NEW LINE TO PASTE HERE:
-    exchange_rate = st.number_input("Exchange Rate (PKR/AED)", value=76.0)
-    
-    # Conversion Logic: Update the '76' to use the new 'exchange_rate' variable
-    total_cost_pkr = (cost_pkr * container_tons * 1000) + (freight_usd * 280) 
-    total_revenue_pkr = (sale_aed * exchange_rate) * (container_tons * 1000) # Updated here
-
 # E. THE AGENT REASONING ENGINE
 market_stats = get_market_data(hs_input)
 c1, c2, c3 = st.columns(3)
