@@ -27,10 +27,7 @@ with st.sidebar:
     st.button("Run Market-Access Agent")
     st.divider()
     st.header("💰 Profitability Calculator")
-    
-    # User Inputs
-    st.header("💰 Profitability Calculator")
-    
+   
     # 1. Inputs: This is where the user types data
     cost_pkr = st.number_input("Purchase Cost (PKR/Kg)", value=80.0, key="cost_val")
     freight_usd = st.number_input("Freight + Logistics (USD/Container)", value=2500.0, key="freight_val")
